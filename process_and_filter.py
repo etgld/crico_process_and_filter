@@ -9,7 +9,7 @@ parser.add_argument("--input_dir", type=str)
 parser.add_argument("--output_dir", type=str)
 
 MINIMUM_LINES = 5
-BRACKET_REGEX = r"\{(.*?)\}"
+BRACKET_REGEX = r"\{(.*?)\};"
 
 
 def newline_filter(fn: str) -> bool:
@@ -28,7 +28,9 @@ def bracket_content_removal(output_dir: str, fn: str) -> None:
 
 
 def process_and_filter(input_dir: str, output_dir: str) -> None:
-    for fn in filter(newline_filter, os.listdir(input_dir)):
+    for fn in filter(
+        newline_filter, map(lambda f: os.path.join(input_dir, f), os.listdir(input_dir))
+    ):
         bracket_content_removal(output_dir, fn)
 
 
