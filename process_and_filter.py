@@ -1,4 +1,5 @@
 import argparse
+import tqdm
 import re
 import os
 from itertools import islice
@@ -28,9 +29,11 @@ def bracket_content_removal(output_dir: str, fn: str) -> None:
 
 
 def process_and_filter(input_dir: str, output_dir: str) -> None:
-    for fn in filter(
-        newline_filter, map(lambda f: os.path.join(input_dir, f), os.listdir(input_dir))
-    ):
+    def full_path(f):
+        return os.path.join(input_dir, f)
+
+    relevant_files = filter(newline_filter, map(full_path, os.listdir(input_dir)))
+    for fn in tqdm.tqdm(relevant_files, desc="Processing Files"):
         bracket_content_removal(output_dir, fn)
 
 
